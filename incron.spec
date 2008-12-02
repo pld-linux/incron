@@ -3,7 +3,7 @@
 Summary:	incron :: inotify cron system
 Name:		incron
 Version:	0.5.7
-Release:	0.1
+Release:	0.2
 License:	GPL v2/LGPL v2.1/BSD-like?
 Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
@@ -59,13 +59,13 @@ rm -rf $RPM_BUILD_ROOT
 %useradd -u 134 -r -d /var/spool/cron -s /bin/false -c "crontab User" -g crontab crontab
 
 %post
-/sbin/chkconfig --add crond
-%service crond restart "Cron Daemon"
+/sbin/chkconfig --add %{name}
+%service %{name} restart "incron Daemon"
 
 %preun
 if [ "$1" = "0" ]; then
-	%service crond stop
-	/sbin/chkconfig --del crond
+	%service %{name} stop
+	/sbin/chkconfig --del %{name}
 fi
 
 %postun
