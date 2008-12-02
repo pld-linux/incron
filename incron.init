@@ -17,10 +17,7 @@
 # Get service config
 [ -f /etc/sysconfig/incron ] && . /etc/sysconfig/incron
 
-RETVAL=0
-# See how we were called.
-case "$1" in
-  start)
+start() {
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/incrond ]; then
 		msg_starting incrond
@@ -30,8 +27,9 @@ case "$1" in
 	else
 		msg_already_running incrond
 	fi
-	;;
-  stop)
+}
+
+stop() {
 	# Stop daemons.
 	if [ -f /var/lock/subsys/incrond ]; then
 		msg_stopping incrond
@@ -40,15 +38,24 @@ case "$1" in
 	else
 		msg_not_running incrond
 	fi
+}
 
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+  	start
+	;;
+  stop)
+	stop
 	;;
   status)
 	status incrond
 	exit $?
 	;;
   restart|force-reload)
-	$0 stop
-	$0 start
+	stop
+	start
 	exit $?
 	;;
   *)

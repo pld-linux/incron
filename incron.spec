@@ -3,7 +3,7 @@
 Summary:	incron :: inotify cron system
 Name:		incron
 Version:	0.5.7
-Release:	0.2
+Release:	0.3
 License:	GPL v2/LGPL v2.1/BSD-like?
 Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
@@ -41,7 +41,8 @@ is that the inotify cron handles filesystem events rather than time periods.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,incron.d} \
+	$RPM_BUILD_ROOT/var/spool/%{name}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -81,7 +82,9 @@ fi
 %attr(640,root,crontab) %config(noreplace) %{_sysconfdir}/incron.conf
 %attr(755,root,root) %{_sbindir}/incrond
 %attr(4755,root,crontab) %{_bindir}/incrontab
+%dir %attr(751,root,crontab) /etc/incron.d
 %{_mandir}/man1/incrontab.1*
 %{_mandir}/man5/incron.conf.5*
 %{_mandir}/man5/incrontab.5*
 %{_mandir}/man8/incrond.8*
+%attr(1730,root,crontab) /var/spool/%{name}
