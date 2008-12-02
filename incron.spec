@@ -10,8 +10,8 @@ Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
 # Source0-md5:	f2be35d85854ed76a78f1a192d253139
 Source1:	%{name}.init
 Patch0:		%{name}-gcc43.patch
-Patch1:		%{name}-DESTDIR.patch
 URL:		http://incron.aiken.cz/
+Patch1:		%{name}-DESTDIR.patch
 Requires(post):	fileutils
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
@@ -20,13 +20,15 @@ Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	rc-scripts
+Requires:	uname(release) >= 2.6.13
 Provides:	group(crontab)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-This program is an "inotify cron" system. It consists of a daemon and a table
-manipulator. You can use it a similar way as the regular cron. The difference
-is that the inotify cron handles filesystem events rather than time periods.
+This program is an "inotify cron" system. It consists of a daemon and
+a table manipulator. You can use it a similar way as the regular cron.
+The difference is that the inotify cron handles filesystem events
+rather than time periods.
 
 %prep
 %setup -q
