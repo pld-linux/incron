@@ -4,7 +4,7 @@
 #
 # chkconfig:	2345 40 60
 #
-# description:	
+# description:	inotify cron-like daemon.
 #
 # processname:	incrond
 # config:	/etc/incron.conf
