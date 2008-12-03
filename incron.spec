@@ -1,9 +1,10 @@
 # TODO:
+# - ignore in system incron.d some files: *~, *.rpmnew, *.rpmsave, ...
 # - directories for incrontab, and many other things
 Summary:	incron :: inotify cron system
 Name:		incron
 Version:	0.5.7
-Release:	0.3
+Release:	0.9
 License:	GPL v2/LGPL v2.1/BSD-like?
 Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
