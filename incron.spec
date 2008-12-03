@@ -5,7 +5,7 @@ Summary:	incron :: inotify cron system
 Name:		incron
 Version:	0.5.7
 Release:	0.9
-License:	GPL v2/LGPL v2.1/BSD-like?
+License:	GPL v2
 Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
 # Source0-md5:	f2be35d85854ed76a78f1a192d253139
