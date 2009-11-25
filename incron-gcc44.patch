@@ -1,0 +1,51 @@
+--- ./appargs.cpp.org	2009-06-21 22:27:24.000000000 +0200
++++ ./appargs.cpp	2009-11-25 21:56:46.978234275 +0100
+@@ -21,6 +21,7 @@
+ 
+ 
+ #include <cstring>
++#include <cstdio>
+ 
+ #include "strtok.h"
+ 
+--- ./inotify-cxx.cpp.org	2009-06-21 22:27:24.000000000 +0200
++++ ./inotify-cxx.cpp	2009-11-25 21:58:13.222711219 +0100
+@@ -23,6 +23,7 @@
+ #include <errno.h>
+ #include <unistd.h>
+ #include <fcntl.h>
++#include <cstdio>
+ 
+ #include "inotify-cxx.h"
+ 
+--- ./usertable.cpp.org	2009-06-21 22:27:24.000000000 +0200
++++ ./usertable.cpp	2009-11-25 21:58:51.692289072 +0100
+@@ -27,6 +27,7 @@
+ #include <stdlib.h>
+ #include <sys/stat.h>
+ #include <cstring>
++#include <cstdio>
+ 
+ #include "usertable.h"
+ #include "incroncfg.h"
+--- ./icd-main.cpp.org	2009-06-21 22:27:24.000000000 +0200
++++ ./icd-main.cpp	2009-11-25 21:59:33.665203662 +0100
+@@ -24,6 +24,7 @@
+ #include <sys/poll.h>
+ #include <sys/stat.h>
+ #include <cstring>
++#include <cstdio>
+ 
+ #include "inotify-cxx.h"
+ #include "appinst.h"
+--- ./incroncfg.cpp.org	2009-06-21 22:27:24.000000000 +0200
++++ ./incroncfg.cpp	2009-11-25 22:05:22.108291144 +0100
+@@ -181,7 +181,7 @@ bool IncronCfg::ParseLine(const char* s,
+ 
+ bool IncronCfg::IsComment(const char* s)
+ {
+-  char* sx = strchr(s, '#');
++  const char* sx = strchr(s, '#');
+   if (sx == NULL)
+     return false;
+     
