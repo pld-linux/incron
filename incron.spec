@@ -1,11 +1,12 @@
 # TODO:
-# - troubles procssing files from /etc/incron.d:
-#   touch /etc/incron.d/ble
+# - processing files from system dir has little side effect:
+#   if file specified in system (or any) table has inexistent paths, incrond
+#   will report on the whole table an error without much detail which entry was it:
 #   haarber incrond[4025]: cannot create watch for system table ble: (2) No such file or directory
 Summary:	incron :: inotify cron system
 Name:		incron
 Version:	0.5.10
-Release:	4
+Release:	5
 License:	GPL v2
 Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
