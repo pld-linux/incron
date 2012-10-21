@@ -4,7 +4,7 @@
 Summary:	incron :: inotify cron system
 Name:		incron
 Version:	0.5.10
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
@@ -33,14 +33,15 @@ rather than time periods.
 
 %prep
 %setup -q
-#%patch0 -p1
+%patch0 -p1
 %patch1 -p1
 
 %build
 %{__make} \
 	LDFLAGS="%{rpmldflags} -Wall" \
-	CXXFLAGS="%{rpmcxxflags} -pipe -Wall" \
 	CXX="%{__cxx}" \
+	OPTIMIZE="%{rpmcxxflags}" \
+	DEBUG=""
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -53,7 +54,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,incron.d} \
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 
-mv -f $RPM_BUILD_ROOT%{_sysconfdir}/incron.conf{.example,}
+install incron.conf.example $RPM_BUILD_ROOT%{_sysconfdir}/incron.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
