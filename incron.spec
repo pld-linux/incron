@@ -10,11 +10,15 @@ Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
 # Source0-md5:	038190dc64568883a206f3d58269b850
 Source1:	%{name}.init
+Source2:	%{name}.service
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-gcc47.patch
 Patch2:		%{name}-man_bugs.patch
 URL:		http://incron.aiken.cz/
+BuildRequires:	rpmbuild(macros) >= 1.644
+Requires:	systemd-units >= 38
 Requires(post):	fileutils
+Requires(post,preun,postun):	systemd-units >= 38
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires(pre):	/bin/id
@@ -48,7 +52,7 @@ rather than time periods.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,incron.d} \
-	$RPM_BUILD_ROOT/var/spool/%{name}
+	$RPM_BUILD_ROOT{/var/spool/%{name},%{systemdunitdir}}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -56,6 +60,7 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,incron.d} \
 
 install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 cp -p incron.conf.example $RPM_BUILD_ROOT%{_sysconfdir}/incron.conf
+cp -p %{SOURCE2} $RPM_BUILD_ROOT%{systemdunitdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -67,27 +72,31 @@ rm -rf $RPM_BUILD_ROOT
 %post
 /sbin/chkconfig --add %{name}
 %service %{name} restart "incron Daemon"
+%systemd_post %{name}.service
 
 %preun
 if [ "$1" = "0" ]; then
 	%service %{name} stop
 	/sbin/chkconfig --del %{name}
 fi
+%systemd_preun %{name}.service
 
 %postun
 if [ "$1" = "0" ]; then
 	%userremove crontab
 	%groupremove crontab
 fi
+%systemd_reload
 
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG COPYING README TODO
-%attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(640,root,crontab) %config(noreplace) %{_sysconfdir}/incron.conf
+%attr(754,root,root) /etc/rc.d/init.d/%{name}
+%{systemdunitdir}/%{name}.service
 %attr(755,root,root) %{_sbindir}/incrond
 %attr(4755,root,crontab) %{_bindir}/incrontab
-%dir %attr(751,root,crontab) /etc/incron.d
+%dir %attr(751,root,crontab) %{_sysconfdir}/incron.d
 %{_mandir}/man1/incrontab.1*
 %{_mandir}/man5/incron.conf.5*
 %{_mandir}/man5/incrontab.5*
