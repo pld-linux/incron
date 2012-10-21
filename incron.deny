@@ -1,0 +1,4 @@
+# This file describes the names of the users which are
+# NOT allowed to use the local incron daemon
+# See incrond(8) for details
+#

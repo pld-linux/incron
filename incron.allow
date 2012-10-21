@@ -1,0 +1,5 @@
+# This file describes the names of the users which are
+# allowed to use the local incron daemon
+# See incrond(8) for details
+#
+root

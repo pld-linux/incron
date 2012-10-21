@@ -11,9 +11,12 @@ Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
 # Source0-md5:	038190dc64568883a206f3d58269b850
 Source1:	%{name}.init
 Source2:	%{name}.service
+Source3:	%{name}.allow
+Source4:	%{name}.deny
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-gcc47.patch
 Patch2:		%{name}-man_bugs.patch
+Patch3:		configdir.patch
 URL:		http://incron.aiken.cz/
 BuildRequires:	rpmbuild(macros) >= 1.644
 Requires:	systemd-units >= 38
@@ -41,6 +44,7 @@ rather than time periods.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__make} \
@@ -51,7 +55,7 @@ rather than time periods.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,incron.d} \
+install -d $RPM_BUILD_ROOT{/etc/rc.d/init.d,%{_sysconfdir}/{%{name},%{name}.d}} \
 	$RPM_BUILD_ROOT{/var/spool/%{name},%{systemdunitdir}}
 
 %{__make} install \
@@ -59,8 +63,10 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,incron.d} \
 	PREFIX=%{_prefix}
 
 install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-cp -p incron.conf.example $RPM_BUILD_ROOT%{_sysconfdir}/incron.conf
+cp -p incron.conf.example $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/%{name}.conf
 cp -p %{SOURCE2} $RPM_BUILD_ROOT%{systemdunitdir}
+cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
+cp -p %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -91,12 +97,15 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc CHANGELOG COPYING README TODO
-%attr(640,root,crontab) %config(noreplace) %{_sysconfdir}/incron.conf
+%attr(750,root,crontab) %dir %{_sysconfdir}/%{name}
+%attr(640,root,crontab) %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
+%attr(640,root,crontab) %config(noreplace,missingok) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/%{name}.allow
+%attr(640,root,crontab) %config(noreplace,missingok) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/%{name}.deny
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %{systemdunitdir}/%{name}.service
 %attr(755,root,root) %{_sbindir}/incrond
 %attr(4755,root,crontab) %{_bindir}/incrontab
-%dir %attr(751,root,crontab) %{_sysconfdir}/incron.d
+%dir %attr(751,root,crontab) %{_sysconfdir}/%{name}.d
 %{_mandir}/man1/incrontab.1*
 %{_mandir}/man5/incron.conf.5*
 %{_mandir}/man5/incrontab.5*

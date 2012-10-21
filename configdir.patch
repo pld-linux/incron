@@ -1,0 +1,112 @@
+--- incron-0.5.10/incroncfg.cpp~	2012-04-07 01:19:27.000000000 +0300
++++ incron-0.5.10/incroncfg.cpp	2012-10-21 17:28:00.359046585 +0300
+@@ -39,8 +39,8 @@
+ {
+   m_defaults.insert(CFG_MAP::value_type("system_table_dir", "/etc/incron.d"));
+   m_defaults.insert(CFG_MAP::value_type("user_table_dir", "/var/spool/incron"));
+-  m_defaults.insert(CFG_MAP::value_type("allowed_users", "/etc/incron.allow"));
+-  m_defaults.insert(CFG_MAP::value_type("denied_users", "/etc/incron.deny"));
++  m_defaults.insert(CFG_MAP::value_type("allowed_users", "/etc/incron/incron.allow"));
++  m_defaults.insert(CFG_MAP::value_type("denied_users", "/etc/incron/incron.deny"));
+   m_defaults.insert(CFG_MAP::value_type("lockfile_dir", "/var/run"));
+   m_defaults.insert(CFG_MAP::value_type("lockfile_name", "incrond"));
+   m_defaults.insert(CFG_MAP::value_type("editor", ""));
+--- incron-0.5.10/incrond.8~	2012-04-07 01:19:27.000000000 +0300
++++ incron-0.5.10/incrond.8	2012-10-21 17:32:18.844200777 +0300
+@@ -9,13 +9,13 @@
+ 
+ \fIincrond\fR can be started from /etc/rc, /etc/rc.local and so on. It daemonizes itself (returns immediately) and doesn't need to be started with & and through \fInohup\fR(1). It can be run on foreground too.
+ 
+-\fIincrond\fR uses two categories of tables \fIincrontab\fR(5). System tables are usually located in /etc/incron.d and are maintained outside of incron (e.g. by various applications). These tables work on root rights level and thus any file may be watched and commands are executed with root privileges.
++\fIincrond\fR uses two categories of tables \fIincrontab\fR(5). System tables are usually located in /etc/incron/incron.d and are maintained outside of incron (e.g. by various applications). These tables work on root rights level and thus any file may be watched and commands are executed with root privileges.
+ 
+ User tables are located in /var/spool/incron by default and have names based on user accounts. These tables use users' access rights, thus only files which the user may access are watched. Commands are executed with users' privileges.
+ 
+ If a table (incrontab) is changed \fIincrond\fR reacts immediately and reloads the table. Currently running child processes (commands) are not affected.
+ 
+-There are two files determining whether an user is allowed to use incron. These files have very simple syntax \- one user name per line. If /etc/incron.allow exists the user must be noted there to be allowed to use incron. Otherwise if /etc/incron.deny exists the user must not be noted there to use incron. If none of these files exists there is no other restriction whether anybody may use incron. Location of these files can be changed in the configuration.
++There are two files determining whether an user is allowed to use incron. These files have very simple syntax \- one user name per line. If /etc/incron/incron.allow exists the user must be noted there to be allowed to use incron. Otherwise if /etc/incron/incron.deny exists the user must not be noted there to use incron. If none of these files exists there is no other restriction whether anybody may use incron. Location of these files can be changed in the configuration.
+ 
+ The daemon itself is currently not protected against looping. If a command executed due to an event causes the same event it leads to an infinite loop unless a flag mask containing IN_NO_LOOP is specified. Please beware of this and do not allow permission for use incron to unreliable users.
+ 
+@@ -24,7 +24,7 @@
+ 
+ \fB\-k\fR (or \fB\-\-kill\fR) option terminates a running instance of \fBincrond\fR.
+ 
+-\fB\-f <FILE>\fR (or \fB\-\-config=<FILE>\fR) option specifies another location for the configuration file (/etc/incron.conf is used by default).
++\fB\-f <FILE>\fR (or \fB\-\-config=<FILE>\fR) option specifies another location for the configuration file (/etc/incron/incron.conf is used by default).
+ 
+ \fBEnvironment variables:\fR For system tables, the default (the same as for incrond itself) environment variable set is used. The same applies to root's table. For non\-root user tables, the whole environment is cleared and then only these variables are set: LOGNAME, USER, USERNAME, SHELL, HOME and PATH. The variables (except PATH) take values from the user database (e.g. /etc/passwd). The PATH variable is set to /usr/local/bin:/usr/bin:/bin:/usr/X11R6/bin.
+ .SH "SEE ALSO"
+--- incron-0.5.10/incron.conf.example~	2012-04-07 01:19:27.000000000 +0300
++++ incron-0.5.10/incron.conf.example	2012-10-21 17:32:44.912059560 +0300
+@@ -26,19 +26,19 @@
+ # Parameter:   allowed_users
+ # Meaning:     allowed users list file
+ # Description: This file contains users allowed to use incron.
+-# Default:     /etc/incron.allow
++# Default:     /etc/incron/incron.allow
+ #
+ # Example:
+-# allowed_users = /etc/incron/allow
++# allowed_users = /etc/incron/incron.allow
+ 
+ 
+ # Parameter:   denied_users
+ # Meaning:     denied users list file
+ # Description: This file contains users denied to use incron.
+-# Default:     /etc/incron.deny
++# Default:     /etc/incron/incron.deny
+ #
+ # Example:
+-# denied_users = /etc/incron/deny
++# denied_users = /etc/incron/incron.deny
+ 
+ 
+ # Parameter:   lockfile_dir
+--- incron-0.5.10/./incron.conf.5~	2012-04-07 01:19:27.000000000 +0300
++++ incron-0.5.10/./incron.conf.5	2012-10-21 18:26:32.645980593 +0300
+@@ -1,8 +1,8 @@
+ .TH "incron.conf" "5" "0.5.10" "Lukas Jelinek" "incron documentation"
+ .SH "NAME"
+-/etc/incron.conf \- main config file for inotify cron (incron)
++/etc/incron/incron.conf \- main config file for inotify cron (incron)
+ .SH "DESCRIPTION"
+-The file \fI/etc/incron.conf\fR contains default settings for the program
++The file \fI/etc/incron.d/incron.conf\fR contains default settings for the program
+ .BR incrond.
+ Each line holds a single value pair in the form \fIoption\fR = \fIvalue\fR.
+ Comment lines must have a hash sign (#) in the first line.
+--- incron-0.5.10/./incrontab.1~	2012-10-21 18:26:19.000000000 +0300
++++ incron-0.5.10/./incrontab.1	2012-10-21 18:27:00.410583705 +0300
+@@ -30,7 +30,7 @@
+ 
+ \fB\-d\fR (or \fB\-\-reload\fR) option causes reloading the current table by \fIincrond\fR(8). It is done through "touching" the table (writing into it without modifying it). This feature is intended e.g. for creating watches on newly created files (with already existing rules) or for rearming IN_ONESHOT watches.
+ 
+-\fB\-f <FILE>\fR (or \fB\-\-config=<FILE>\fR) option specifies another location for the configuration file (/etc/incron.conf is used by default). This feature requires root privileges.
++\fB\-f <FILE>\fR (or \fB\-\-config=<FILE>\fR) option specifies another location for the configuration file (/etc/incron/incron.conf is used by default). This feature requires root privileges.
+ 
+ There is a few complex algorithm how to determine which editor will be user for editing. If any of the following rule succeeds the appropriate editor is used:
+ 
+--- incron-0.5.10/./incroncfg.cpp~	2012-10-21 18:26:19.000000000 +0300
++++ incron-0.5.10/./incroncfg.cpp	2012-10-21 18:27:35.458853260 +0300
+@@ -24,7 +24,7 @@
+ #include "incroncfg.h"
+ 
+ 
+-#define INCRON_CFG_DEFAULT "/etc/incron.conf"
++#define INCRON_CFG_DEFAULT "/etc/incron/incron.conf"
+ 
+ 
+ typedef std::map<std::string, std::string> CFG_MAP;
+--- incron-0.5.10/./incron.h~	2012-04-07 01:19:27.000000000 +0300
++++ incron-0.5.10/./incron.h	2012-10-21 18:27:51.552922634 +0300
+@@ -33,7 +33,7 @@
+ #define INCRON_BUG_ADDRESS "<bugs@aiken.cz>"
+ 
+ /// Default configuration file
+-#define INCRON_CONFIG "/etc/incron.conf"
++#define INCRON_CONFIG "/etc/incron/incron.conf"
+ 
+ 
+ #endif //_INCRON_H_
