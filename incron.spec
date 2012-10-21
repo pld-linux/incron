@@ -54,16 +54,15 @@ install -d $RPM_BUILD_ROOT/etc/{rc.d/init.d,incron.d} \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PREFIX=%{_prefix}
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
-
-install incron.conf.example $RPM_BUILD_ROOT%{_sysconfdir}/incron.conf
+install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+cp -p incron.conf.example $RPM_BUILD_ROOT%{_sysconfdir}/incron.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pre
 %groupadd -g 117 -r -f crontab
-%useradd -u 134 -r -d /var/spool/cron -s /bin/false -c "crontab User" -g crontab crontab
+%useradd -u 134 -r -d /var/spool/%{name} -s /bin/false -c "crontab User" -g crontab crontab
 
 %post
 /sbin/chkconfig --add %{name}
@@ -83,7 +82,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGELOG COPYING doc/html/ README TODO
+%doc CHANGELOG COPYING README TODO
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(640,root,crontab) %config(noreplace) %{_sysconfdir}/incron.conf
 %attr(755,root,root) %{_sbindir}/incrond
