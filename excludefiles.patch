@@ -1,0 +1,31 @@
+--- incron-0.5.10/usertable.cpp	2012-04-07 01:19:27.000000000 +0300
++++ incron-0.5.10.glen/usertable.cpp	2012-10-21 19:06:15.091453806 +0300
+@@ -177,6 +177,28 @@
+         g_fFinish = true;
+       }
+       else if (!e.GetName().empty()) {
++        const char *fn = e.GetName().c_str();
++        size_t len = strlen(fn);
++
++        /*
++         * skip file names beginning with "." or "#" to skip hidden files
++         */
++        if (fn[0] == '.' || fn[0] == '#') {
++          continue;
++        }
++
++        /* ignore files ending with '~' */
++        if (fn[len - 1] == '~') {
++          continue;
++        }
++
++        /* ignore *.rpmnew, *.rpmsave and *.rpmorig files */
++        if ((len > 7 && strstr(&fn[len - 7], ".rpmnew")) ||
++          (len > 8 && strstr(&fn[len - 8], ".rpmsave")) ||
++          (len > 8 && strstr(&fn[len - 8], ".rpmorig"))) {
++          continue;
++        }
++
+         SUT_MAP::iterator it = g_ut.find(IncronCfg::BuildPath(m_pSys->GetPath(), e.GetName()));
+         if (it != g_ut.end()) {
+           UserTable* pUt = (*it).second;

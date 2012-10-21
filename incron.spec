@@ -1,10 +1,11 @@
 # TODO:
-# - ignore in system incron.d some files: *~, *.rpmnew, *.rpmsave, ...
-# - directories for incrontab, and many other things
+# - troubles procssing files from /etc/incron.d:
+#   touch /etc/incron.d/ble
+#   haarber incrond[4025]: cannot create watch for system table ble: (2) No such file or directory
 Summary:	incron :: inotify cron system
 Name:		incron
 Version:	0.5.10
-Release:	3
+Release:	4
 License:	GPL v2
 Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
@@ -17,6 +18,7 @@ Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-gcc47.patch
 Patch2:		%{name}-man_bugs.patch
 Patch3:		configdir.patch
+Patch4:		excludefiles.patch
 URL:		http://incron.aiken.cz/
 BuildRequires:	rpmbuild(macros) >= 1.644
 Requires:	systemd-units >= 38
@@ -45,6 +47,7 @@ rather than time periods.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %{__make} \
