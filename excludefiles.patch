@@ -1,3 +1,7 @@
+TODO:
+make this patch smarter, combine the parsing into common place
+perhaps even make it configurable (so upstream would accept it)
+
 --- incron-0.5.10/usertable.cpp	2012-04-07 01:19:27.000000000 +0300
 +++ incron-0.5.10.glen/usertable.cpp	2012-10-21 19:06:15.091453806 +0300
 @@ -177,6 +177,28 @@
@@ -29,3 +33,38 @@
          SUT_MAP::iterator it = g_ut.find(IncronCfg::BuildPath(m_pSys->GetPath(), e.GetName()));
          if (it != g_ut.end()) {
            UserTable* pUt = (*it).second;
+--- incron-0.5.10/icd-main.cpp~	2012-10-21 19:15:17.000000000 +0300
++++ incron-0.5.10/icd-main.cpp	2012-10-21 19:19:01.599754423 +0300
+@@ -142,8 +142,30 @@
+     struct dirent* pDe = NULL;
+     while ((pDe = readdir(d)) != NULL) {
+       std::string un(pDe->d_name);
+-      std::string path(IncronCfg::BuildPath(s, pDe->d_name)); 
+-      
++      std::string path(IncronCfg::BuildPath(s, pDe->d_name));
++
++      const char *fn = pDe->d_name;
++      size_t len = strlen(fn);
++
++      /*
++       * skip file names beginning with "." or "#" to skip hidden files
++       */
++      if (fn[0] == '.' || fn[0] == '#') {
++        continue;
++      }
++
++      /* ignore files ending with '~' */
++      if (fn[len - 1] == '~') {
++        continue;
++      }
++
++      /* ignore *.rpmnew, *.rpmsave and *.rpmorig files */
++      if ((len > 7 && strstr(&fn[len - 7], ".rpmnew")) ||
++        (len > 8 && strstr(&fn[len - 8], ".rpmsave")) ||
++        (len > 8 && strstr(&fn[len - 8], ".rpmorig"))) {
++        continue;
++      }
++
+       bool ok = pDe->d_type == DT_REG;
+       if (pDe->d_type == DT_UNKNOWN) {
+         struct stat st;
