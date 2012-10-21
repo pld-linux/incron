@@ -1,10 +1,11 @@
 #!/bin/sh
 #
-# incrond	Start/Stop the inotify cron-like daemon.
+# incrond	This shell script enables the incrond daemon
 #
 # chkconfig:	2345 40 60
 #
-# description:	inotify cron-like daemon.
+# description:  This is a daemon which works like cron, but handles filesystem events \
+#               instead of time periods and can send notifications via mail, DBus or syslog.
 #
 # processname:	incrond
 # config:	/etc/incron.conf
