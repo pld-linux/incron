@@ -19,35 +19,37 @@
 
 start() {
 	# Check if the service is already running?
-	if [ ! -f /var/lock/subsys/incrond ]; then
-		msg_starting incrond
-		daemon /usr/sbin/incrond
-		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/incrond
-	else
+	if [ -f /var/lock/subsys/incrond ]; then
 		msg_already_running incrond
+		return
 	fi
+
+	msg_starting incrond
+	daemon /usr/sbin/incrond
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/incrond
 }
 
 stop() {
 	# Stop daemons.
-	if [ -f /var/lock/subsys/incrond ]; then
-		msg_stopping incrond
-		killproc incrond
-		rm -f /var/lock/subsys/incrond >/dev/null 2>&1
-	else
+	if [ ! -f /var/lock/subsys/incrond ]; then
 		msg_not_running incrond
 	fi
+
+	msg_stopping incrond
+	killproc incrond
+	rm -f /var/lock/subsys/incrond >/dev/null 2>&1
 }
 
 condrestart() {
-	if [ -f /var/lock/subsys/incrond ]; then
-		stop
-		start
-	else
+	if [ ! -f /var/lock/subsys/incrond ]; then
 		msg_not_running incrond
 		RETVAL=$1
+		return
 	fi
+
+	stop
+	start
 }
 
 RETVAL=0
