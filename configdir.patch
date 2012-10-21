@@ -64,8 +64,8 @@
  
  
  # Parameter:   lockfile_dir
---- incron-0.5.10/./incron.conf.5~	2012-04-07 01:19:27.000000000 +0300
-+++ incron-0.5.10/./incron.conf.5	2012-10-21 18:26:32.645980593 +0300
+--- incron-0.5.10/./incron.conf.5	2012-10-21 18:26:32.645980593 +0300
++++ incron-0.5.10/./incron.conf.5	2012-10-21 18:43:53.853688470 +0300
 @@ -1,8 +1,8 @@
  .TH "incron.conf" "5" "0.5.10" "Lukas Jelinek" "incron documentation"
  .SH "NAME"
@@ -77,8 +77,31 @@
  .BR incrond.
  Each line holds a single value pair in the form \fIoption\fR = \fIvalue\fR.
  Comment lines must have a hash sign (#) in the first line.
---- incron-0.5.10/./incrontab.1~	2012-10-21 18:26:19.000000000 +0300
-+++ incron-0.5.10/./incrontab.1	2012-10-21 18:27:00.410583705 +0300
+@@ -19,11 +19,11 @@
+ .TP 
+ \fBallowed_users\fP
+ This file contains users allowed to use incron.
+-.BR Default : \fI/etc/incron.allow\fR
++.BR Default : \fI/etc/incron/incron.allow\fR
+ .TP 
+ \fBdenied_users\fP
+ This file contains users denied to use incron.
+-.BR Default : \fI/etc/incron.deny\fR
++.BR Default : \fI/etc/incron/incron.deny\fR
+ .TP 
+ \fBlockfile_dir\fP
+ This directory is used for creating a lock avoiding to run multiple instances
+--- incron-0.5.10/./incrontab.1	2012-10-21 18:27:00.410583705 +0300
++++ incron-0.5.10/./incrontab.1	2012-10-21 18:44:03.474128473 +0300
+@@ -12,7 +12,7 @@
+ 
+ All informational messages of this program are printed to the standard error output (stderr).
+ 
+-If \fI/etc/incron.allow\fR exists only users listed here may use incron. Otherwise if \fI/etc/incron.deny\fR exists only users NOT listed here may use incron. If none of these files exists everyone is allowed to use incron. (\fBImportant note:\fR This behavior is insecure and will be probably changed to be compatible with the style used by ISC Cron.) Location of these files can be changed in the configuration.
++If \fI/etc/incron/incron.allow\fR exists only users listed here may use incron. Otherwise if \fI/etc/incron.deny\fR exists only users NOT listed here may use incron. If none of these files exists everyone is allowed to use incron. (\fBImportant note:\fR This behavior is insecure and will be probably changed to be compatible with the style used by ISC Cron.) Location of these files can be changed in the configuration.
+ 
+ The first form of this command imports a file, validates it and stores to the table. "\-" can be used for loading from the standard input.
+ 
 @@ -30,7 +30,7 @@
  
  \fB\-d\fR (or \fB\-\-reload\fR) option causes reloading the current table by \fIincrond\fR(8). It is done through "touching" the table (writing into it without modifying it). This feature is intended e.g. for creating watches on newly created files (with already existing rules) or for rearming IN_ONESHOT watches.
