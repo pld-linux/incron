@@ -3,6 +3,10 @@
 #   if file specified in system (or any) table has inexistent paths, incrond
 #   will report on the whole table an error without much detail which entry was it:
 #   haarber incrond[4025]: cannot create watch for system table ble: (2) No such file or directory
+# - systemd service spits some pid notice on startup, but service startups itself fine:
+#   Oct 21 21:36:48 haarber incrond[4670]: starting service (version 0.5.10, built on Oct 21 2012 19:20:10)
+#   Oct 21 21:36:48 haarber systemd[1]: PID file /var/run/incrond.pid not readable (yet?) after start.
+#   Oct 21 21:36:48 haarber incrond[4671]: loading system tables
 Summary:	incron :: inotify cron system
 Name:		incron
 Version:	0.5.10
