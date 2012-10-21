@@ -91,14 +91,14 @@
  .TP 
  \fBlockfile_dir\fP
  This directory is used for creating a lock avoiding to run multiple instances
---- incron-0.5.10/./incrontab.1	2012-10-21 18:27:00.410583705 +0300
-+++ incron-0.5.10/./incrontab.1	2012-10-21 18:44:03.474128473 +0300
+--- incron-0.5.10/./incrontab.1	2012-10-21 18:44:03.474128473 +0300
++++ incron-0.5.10/./incrontab.1	2012-10-21 19:14:46.738098150 +0300
 @@ -12,7 +12,7 @@
  
  All informational messages of this program are printed to the standard error output (stderr).
  
 -If \fI/etc/incron.allow\fR exists only users listed here may use incron. Otherwise if \fI/etc/incron.deny\fR exists only users NOT listed here may use incron. If none of these files exists everyone is allowed to use incron. (\fBImportant note:\fR This behavior is insecure and will be probably changed to be compatible with the style used by ISC Cron.) Location of these files can be changed in the configuration.
-+If \fI/etc/incron/incron.allow\fR exists only users listed here may use incron. Otherwise if \fI/etc/incron.deny\fR exists only users NOT listed here may use incron. If none of these files exists everyone is allowed to use incron. (\fBImportant note:\fR This behavior is insecure and will be probably changed to be compatible with the style used by ISC Cron.) Location of these files can be changed in the configuration.
++If \fI/etc/incron/incron.allow\fR exists only users listed here may use incron. Otherwise if \fI/etc/incron/incron.deny\fR exists only users NOT listed here may use incron. If none of these files exists everyone is allowed to use incron. (\fBImportant note:\fR This behavior is insecure and will be probably changed to be compatible with the style used by ISC Cron.) Location of these files can be changed in the configuration.
  
  The first form of this command imports a file, validates it and stores to the table. "\-" can be used for loading from the standard input.
  
