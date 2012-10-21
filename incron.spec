@@ -3,15 +3,15 @@
 # - directories for incrontab, and many other things
 Summary:	incron :: inotify cron system
 Name:		incron
-Version:	0.5.9
-Release:	1
+Version:	0.5.10
+Release:	0.1
 License:	GPL v2
 Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
-# Source0-md5:	ccae2ca5cb4b142be002ab482250fb5f
+# Source0-md5:	038190dc64568883a206f3d58269b850
 Source1:	%{name}.init
 Patch0:		%{name}-DESTDIR.patch
-Patch1:		%{name}-gcc44.patch
+Patch1:		%{name}-gcc47.patch
 URL:		http://incron.aiken.cz/
 Requires(post):	fileutils
 Requires(post,preun):	/sbin/chkconfig
@@ -33,7 +33,7 @@ rather than time periods.
 
 %prep
 %setup -q
-%patch0 -p1
+#%patch0 -p1
 %patch1 -p1
 
 %build
