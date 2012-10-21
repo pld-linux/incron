@@ -4,7 +4,7 @@
 Summary:	incron :: inotify cron system
 Name:		incron
 Version:	0.5.10
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Daemons
 Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
@@ -12,6 +12,7 @@ Source0:	http://inotify.aiken.cz/download/incron/%{name}-%{version}.tar.bz2
 Source1:	%{name}.init
 Patch0:		%{name}-DESTDIR.patch
 Patch1:		%{name}-gcc47.patch
+Patch2:		%{name}-man_bugs.patch
 URL:		http://incron.aiken.cz/
 Requires(post):	fileutils
 Requires(post,preun):	/sbin/chkconfig
@@ -35,6 +36,7 @@ rather than time periods.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__make} \
